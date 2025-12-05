@@ -1,6 +1,5 @@
 import { Chat } from './chat';
-// import Image from 'next/image'; // Removing Image usage for the logo to use a standard img tag for the external URL or just text if preferred, but I will try the direct link.
-import { Target } from 'lucide-react';
+import { Logo } from '@/components/logo';
 
 export default function Home() {
   return (
@@ -9,20 +8,7 @@ export default function Home() {
       <header className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Using the direct Google Drive link format or a fallback icon */}
-            <img
-              src="https://drive.google.com/uc?export=view&id=1F4CX-akjLBblGm4Ad21LAHPrCFnVUhEe"
-              alt="DeepTarget Logo"
-              className="h-8 w-auto object-contain"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling?.classList.remove('hidden');
-              }}
-            />
-            <div className="hidden flex items-center gap-2 font-bold text-xl text-[#36322F] dark:text-white">
-               <Target className="w-6 h-6 text-red-600" />
-               <span>DeepTarget</span>
-            </div>
+            <Logo />
           </div>
         </div>
       </header>
