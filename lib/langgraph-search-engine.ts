@@ -201,12 +201,12 @@ export class LangGraphSearchEngine {
 
   getInitialSteps(): SearchStep[] {
     return [
-      { id: 'understanding', label: 'Understanding request', status: 'pending' },
-      { id: 'planning', label: 'Planning search', status: 'pending' },
-      { id: 'searching', label: 'Searching sources', status: 'pending' },
-      { id: 'analyzing', label: 'Analyzing content', status: 'pending' },
-      { id: 'synthesizing', label: 'Synthesizing answer', status: 'pending' },
-      { id: 'complete', label: 'Complete', status: 'pending' }
+      { id: 'understanding', label: 'Entendendo a solicitação', status: 'pending' },
+      { id: 'planning', label: 'Planejando a pesquisa', status: 'pending' },
+      { id: 'searching', label: 'Pesquisando fontes', status: 'pending' },
+      { id: 'analyzing', label: 'Analisando conteúdo', status: 'pending' },
+      { id: 'synthesizing', label: 'Sintetizando resposta', status: 'pending' },
+      { id: 'complete', label: 'Concluído', status: 'pending' }
     ];
   }
 
@@ -229,7 +229,7 @@ export class LangGraphSearchEngine {
           eventCallback({
             type: 'phase-update',
             phase: 'understanding',
-            message: 'Analyzing your request...'
+            message: 'Analisando sua solicitação...'
           });
         }
         
@@ -249,7 +249,7 @@ export class LangGraphSearchEngine {
           };
         } catch (error) {
           return {
-            error: error instanceof Error ? error.message : 'Failed to understand query',
+            error: error instanceof Error ? error.message : 'Falha ao entender a solicitação',
             errorType: 'llm' as ErrorType,
             phase: 'error' as SearchPhase
           };
@@ -264,7 +264,7 @@ export class LangGraphSearchEngine {
           eventCallback({
             type: 'phase-update',
             phase: 'planning',
-            message: 'Planning search strategy...'
+            message: 'Planejando estratégia de pesquisa...'
           });
         }
         
@@ -320,13 +320,13 @@ export class LangGraphSearchEngine {
               eventCallback({
                 type: 'thinking',
                 message: searchQueries.length > 3 
-                  ? `I detected ${subQueries.length} different questions. I'll search for each one separately.`
-                  : `I'll search for information to answer your question.`
+                  ? `Detectei ${subQueries.length} perguntas diferentes. Vou pesquisar cada uma separadamente.`
+                  : `Vou pesquisar informações para responder sua pergunta.`
               });
             } else {
               eventCallback({
                 type: 'thinking',
-                message: `Trying alternative search strategies for: ${unansweredQueries.map(sq => sq.question).join(', ')}`
+                message: `Tentando estratégias alternativas de pesquisa para: ${unansweredQueries.map(sq => sq.question).join(', ')}`
               });
             }
           }
@@ -339,7 +339,7 @@ export class LangGraphSearchEngine {
           };
         } catch (error) {
           return {
-            error: error instanceof Error ? error.message : 'Failed to plan search',
+            error: error instanceof Error ? error.message : 'Falha ao planejar pesquisa',
             errorType: 'llm' as ErrorType,
             phase: 'error' as SearchPhase
           };
@@ -356,7 +356,7 @@ export class LangGraphSearchEngine {
           eventCallback({
             type: 'phase-update',
             phase: 'searching',
-            message: 'Searching the web...'
+            message: 'Pesquisando na web...'
           });
         }
         
@@ -549,7 +549,7 @@ export class LangGraphSearchEngine {
               if (eventCallback) {
                 eventCallback({
                   type: 'thinking',
-                  message: `${new URL(source.url).hostname} is taking too long to respond, moving on...`
+                  message: `${new URL(source.url).hostname} está demorando muito, pulando...`
                 });
               }
             }
@@ -557,7 +557,7 @@ export class LangGraphSearchEngine {
             if (eventCallback) {
               eventCallback({
                 type: 'thinking',
-                message: `Couldn't access ${new URL(source.url).hostname}, trying other sources...`
+                message: `Não foi possível acessar ${new URL(source.url).hostname}, tentando outras fontes...`
               });
             }
           }
@@ -577,7 +577,7 @@ export class LangGraphSearchEngine {
           eventCallback({
             type: 'phase-update',
             phase: 'analyzing',
-            message: 'Analyzing gathered information...'
+            message: 'Analisando informações coletadas...'
           });
         }
         
@@ -609,30 +609,30 @@ export class LangGraphSearchEngine {
             if (answeredCount === totalQuestions) {
               eventCallback({
                 type: 'thinking',
-                message: `Found answers to all ${totalQuestions} questions across ${allSources.length} sources`
+                message: `Encontradas respostas para todas as ${totalQuestions} perguntas em ${allSources.length} fontes`
               });
             } else if (answeredCount > 0) {
               eventCallback({
                 type: 'thinking',
-                message: `Found answers to ${answeredCount} of ${totalQuestions} questions. Still missing: ${updatedSubQueries.filter(sq => !sq.answered).map(sq => sq.question).join(', ')}`
+                message: `Encontradas respostas para ${answeredCount} de ${totalQuestions} perguntas. Ainda faltando: ${updatedSubQueries.filter(sq => !sq.answered).map(sq => sq.question).join(', ')}`
               });
             } else if (searchAttempt >= SEARCH_CONFIG.MAX_SEARCH_ATTEMPTS) {
               // Only show "could not find" message when we've exhausted all attempts
               eventCallback({
                 type: 'thinking',
-                message: `Could not find specific answers in ${allSources.length} sources. The information may not be publicly available.`
+                message: `Não foi possível encontrar respostas específicas em ${allSources.length} fontes. A informação pode não estar disponível publicamente.`
               });
             } else if (hasPartialInfo && searchAttempt >= 3) {
               // If we have partial info and tried 3+ times, stop searching
               eventCallback({
                 type: 'thinking',
-                message: `Found partial information. Moving forward with what's available.`
+                message: `Encontradas informações parciais. Prosseguindo com o que está disponível.`
               });
             } else {
               // For intermediate attempts, show a different message
               eventCallback({
                 type: 'thinking',
-                message: `Searching for more specific information...`
+                message: `Pesquisando por informações mais específicas...`
               });
             }
           }
@@ -679,7 +679,7 @@ export class LangGraphSearchEngine {
           if (eventCallback && allSources.length > 0) {
             eventCallback({
               type: 'thinking',
-              message: `Found ${allSources.length} sources with quality information`
+              message: `Encontradas ${allSources.length} fontes com informações de qualidade`
             });
           }
           
@@ -713,7 +713,7 @@ export class LangGraphSearchEngine {
           eventCallback({
             type: 'phase-update',
             phase: 'synthesizing',
-            message: 'Creating comprehensive answer...'
+            message: 'Criando resposta abrangente...'
           });
         }
         
@@ -746,7 +746,7 @@ export class LangGraphSearchEngine {
           };
         } catch (error) {
           return {
-            error: error instanceof Error ? error.message : 'Failed to generate answer',
+            error: error instanceof Error ? error.message : 'Falha ao gerar resposta',
             errorType: 'llm' as ErrorType,
             phase: 'error' as SearchPhase
           };
@@ -760,7 +760,7 @@ export class LangGraphSearchEngine {
         if (eventCallback) {
           eventCallback({
             type: 'error',
-            error: state.error || 'An unknown error occurred',
+            error: state.error || 'Ocorreu um erro desconhecido',
             errorType: state.errorType
           });
         }
@@ -792,7 +792,7 @@ export class LangGraphSearchEngine {
           eventCallback({
             type: 'phase-update',
             phase: 'complete',
-            message: 'Search complete!'
+            message: 'Pesquisa concluída!'
           });
           
           eventCallback({
@@ -928,7 +928,7 @@ export class LangGraphSearchEngine {
     } catch (error) {
       onEvent({
         type: 'error',
-        error: error instanceof Error ? error.message : 'Search failed',
+        error: error instanceof Error ? error.message : 'A pesquisa falhou',
         errorType: 'unknown'
       });
     }
@@ -938,42 +938,40 @@ export class LangGraphSearchEngine {
   // Get current date for context
   private getCurrentDateContext(): string {
     const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', { 
+    const dateStr = now.toLocaleDateString('pt-BR', { 
       weekday: 'long', 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     });
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
     
-    return `Today's date is ${dateStr}. The current year is ${year} and it's currently ${month}/${year}.`;
+    return `A data de hoje é ${dateStr}.`;
   }
 
   // Pure helper methods (no side effects)
   private async analyzeQuery(query: string, context?: { query: string; response: string }[]): Promise<string> {
     let contextPrompt = '';
     if (context && context.length > 0) {
-      contextPrompt = '\n\nPrevious conversation:\n';
+      contextPrompt = '\n\nConversa anterior:\n';
       context.forEach(c => {
-        contextPrompt += `User: ${c.query}\nAssistant: ${c.response.substring(0, SEARCH_CONFIG.CONTEXT_PREVIEW_LENGTH)}...\n\n`;
+        contextPrompt += `Usuário: ${c.query}\nAssistente: ${c.response.substring(0, SEARCH_CONFIG.CONTEXT_PREVIEW_LENGTH)}...\n\n`;
       });
     }
     
     const messages = [
       new SystemMessage(`${this.getCurrentDateContext()}
 
-Analyze this search query and explain what you understand the user is looking for.
+Analise esta consulta de pesquisa e explique em PORTUGUÊS o que você entendeu que o usuário está procurando.
 
-Instructions:
-- Start with a clear, concise title (e.g., "Researching egg shortage" or "Understanding climate change impacts")
-- Then explain in 1-2 sentences what aspects of the topic the user wants to know about
-- If this relates to previous questions, acknowledge that connection
-- Finally, mention that you'll search for information to help answer their question
-- Only mention searching for "latest" information if the query is explicitly about recent events or current trends
+Instruções:
+- Comece com um título claro e conciso (ex: "Pesquisando sobre escassez de ovos" ou "Entendendo os impactos da mudança climática")
+- Depois explique em 1-2 frases quais aspectos do tópico o usuário quer saber
+- Se isso se relacionar com perguntas anteriores, reconheça essa conexão
+- Finalmente, mencione que você pesquisará informações para ajudar a responder a pergunta
+- Só mencione pesquisar por informações "mais recentes" se a consulta for explicitamente sobre eventos recentes ou tendências atuais
 
-Keep it natural and conversational, showing you truly understand their request.`),
-      new HumanMessage(`Query: "${query}"${contextPrompt}`)
+Mantenha natural e conversacional, mostrando que você realmente entendeu o pedido. RESPONDA SEMPRE EM PORTUGUÊS.`),
+      new HumanMessage(`Consulta: "${query}"${contextPrompt}`)
     ];
     
     const response = await this.llm.invoke(messages);
@@ -987,68 +985,47 @@ Keep it natural and conversational, showing you truly understand their request.`
     if (sources.length === 0) return subQueries;
     
     const messages = [
-      new SystemMessage(`Check which questions have been answered by the provided sources.
+      new SystemMessage(`Verifique quais perguntas foram respondidas pelas fontes fornecidas.
 
-For each question, determine:
-1. If the sources contain a direct answer
-2. The confidence level (0.0-1.0) that the question was fully answered
-3. A brief answer summary if found
+Para cada pergunta, determine:
+1. Se as fontes contêm uma resposta direta
+2. O nível de confiança (0.0-1.0) de que a pergunta foi totalmente respondida
+3. Um breve resumo da resposta se encontrada (EM PORTUGUÊS)
 
-Guidelines:
-- For "who" questions about people/founders: Mark as answered (0.8+ confidence) if you find names of specific people
-- For "what" questions: Mark as answered (0.8+ confidence) if you find the specific information requested
-- For "when" questions: Mark as answered (0.8+ confidence) if you find dates or time periods
-- For "how many" questions: Require specific numbers (0.8+ confidence)
-- For comparison questions: Require information about all items being compared
-- If sources clearly answer the question but lack some minor details, use medium confidence (0.6-0.7)
-- If sources mention the topic but don't answer the specific question, use low confidence (< 0.3)
+Diretrizes:
+- Para perguntas "quem" sobre pessoas/fundadores: Marque como respondido (confiança 0.8+) se encontrar nomes de pessoas específicas
+- Para perguntas "o que": Marque como respondido (confiança 0.8+) se encontrar as informações específicas solicitadas
+- Para perguntas "quando": Marque como respondido (confiança 0.8+) se encontrar datas ou períodos
+- Para perguntas "quantos": Exija números específicos (confiança 0.8+)
+- Para perguntas de comparação: Exija informações sobre todos os itens sendo comparados
+- Se as fontes respondem claramente à pergunta mas faltam alguns detalhes menores, use confiança média (0.6-0.7)
+- Se as fontes mencionam o tópico mas não respondem à pergunta específica, use confiança baixa (< 0.3)
 
-Version number matching:
-- "0528" in the question matches "0528", "-0528", "May 28", or "May 28, 2025" in sources
-- Example: Question about "DeepSeek R1 0528" is ANSWERED if sources mention:
-  - "DeepSeek R1-0528" (exact match)
-  - "DeepSeek R1 was updated on May 28" (date match)
-  - "DeepSeek's R1 model was updated on May 28, 2025" (date match)
-- Hyphens and spaces in version numbers should be ignored when matching
-- If the summary mentions the product and a matching date/version, that's a full answer
-
-Special cases:
-- If asking about a product/model with a version number (e.g., "ModelX v2.5.1" or "Product 0528"), check BOTH:
-  1. If sources mention the EXACT version → mark as answered with high confidence (0.8+)
-  2. If sources only mention the base product → mark as answered with medium confidence (0.6+)
-- Example: Question "What is ProductX 1234?" 
-  - If sources mention "ProductX 1234" specifically → confidence: 0.9
-  - If sources only mention "ProductX" → confidence: 0.6
-- IMPORTANT: For questions like "What is DeepSeek R1 0528?", if sources contain "DeepSeek R1-0528" or "DeepSeek R1 0528", that's a DIRECT match (confidence 0.9+)
-- If multiple sources contradict whether something exists, use low confidence (0.3) but still provide what information was found
-
-Important: Be generous in recognizing answers. If the source clearly provides the information asked for (e.g., "The founders are X, Y, and Z"), mark it as answered with high confidence.
-
-Return ONLY a JSON array, no markdown formatting or code blocks:
+Retorne APENAS um array JSON, sem formatação markdown ou blocos de código:
 [
   {
-    "question": "the original question",
+    "question": "a pergunta original",
     "answered": true/false,
     "confidence": 0.0-1.0,
-    "answer": "brief answer if found",
-    "sources": ["urls that contain the answer"]
+    "answer": "breve resposta se encontrada",
+    "sources": ["urls que contêm a resposta"]
   }
 ]`),
-      new HumanMessage(`Questions to check:
+      new HumanMessage(`Perguntas para verificar:
 ${subQueries.map(sq => sq.question).join('\n')}
 
-Sources:
+Fontes:
 ${sources.slice(0, SEARCH_CONFIG.MAX_SOURCES_TO_CHECK).map(s => {
-  let sourceInfo = `URL: ${s.url}\nTitle: ${s.title}\n`;
+  let sourceInfo = `URL: ${s.url}\nTítulo: ${s.title}\n`;
   
   // Include summary if available (this is the key insight from the search)
   if (s.summary) {
-    sourceInfo += `Summary: ${s.summary}\n`;
+    sourceInfo += `Resumo: ${s.summary}\n`;
   }
   
   // Include content preview
   if (s.content) {
-    sourceInfo += `Content: ${s.content.slice(0, SEARCH_CONFIG.ANSWER_CHECK_PREVIEW)}\n`;
+    sourceInfo += `Conteúdo: ${s.content.slice(0, SEARCH_CONFIG.ANSWER_CHECK_PREVIEW)}\n`;
   }
   
   return sourceInfo;
@@ -1086,47 +1063,26 @@ ${sources.slice(0, SEARCH_CONFIG.MAX_SOURCES_TO_CHECK).map(s => {
 
   private async extractSubQueries(query: string): Promise<Array<{ question: string; searchQuery: string }>> {
     const messages = [
-      new SystemMessage(`Extract the individual factual questions from this query. Each question should be something that can be definitively answered.
+      new SystemMessage(`Extraia as perguntas factuais individuais desta consulta. Cada pergunta deve ser algo que possa ser definitivamente respondido.
 
-IMPORTANT: 
-- When the user mentions something with a version/number (like "deepseek r1 0528"), include the FULL version in the question
-- For the search query, you can simplify slightly but keep key identifiers
-- Example: "deepseek r1 0528" → question: "What is DeepSeek R1 0528?", searchQuery: "DeepSeek R1 0528"
+IMPORTANTE: 
+- Quando o usuário menciona algo com uma versão/número (como "deepseek r1 0528"), inclua a versão COMPLETA na pergunta
+- Para a consulta de pesquisa (searchQuery), você pode simplificar um pouco mas mantenha os identificadores principais
+- Use PORTUGUÊS para as perguntas extraídas, mas pode usar termos em inglês para searchQuery se for mais provável encontrar resultados (termos técnicos, nomes de produtos)
 
-Examples:
-"Who founded Anthropic and when" → 
+Exemplos:
+"Quem fundou a Anthropic e quando" → 
 [
-  {"question": "Who founded Anthropic?", "searchQuery": "Anthropic founders"},
-  {"question": "When was Anthropic founded?", "searchQuery": "Anthropic founded date year"}
+  {"question": "Quem fundou a Anthropic?", "searchQuery": "Anthropic founders"},
+  {"question": "Quando a Anthropic foi fundada?", "searchQuery": "Anthropic founded date year"}
 ]
 
-"What is OpenAI's Q3 2024 revenue and who is their VP of Infrastructure" →
-[
-  {"question": "What was OpenAI's Q3 2024 revenue?", "searchQuery": "OpenAI Q3 2024 revenue earnings"},
-  {"question": "Who is OpenAI's VP of Infrastructure?", "searchQuery": "OpenAI VP Infrastructure executive team"}
-]
+Importante: 
+- Para pedidos de comparação, crie uma única pergunta/pesquisa que cubra ambos os itens
+- Mantenha o número de sub-consultas razoável (mire em 3-5 no máximo)
 
-"Tell me about Product A + Model B version 123" →
-[
-  {"question": "What is Product A?", "searchQuery": "Product A features"},
-  {"question": "What is Model B version 123?", "searchQuery": "Model B"}
-]
-
-"Who founded Company X, compare Product A and Product B, and tell me about Technology Y + Model Z 1234" →
-[
-  {"question": "Who founded Company X?", "searchQuery": "Company X founders"},
-  {"question": "How do Product A and Product B compare?", "searchQuery": "Product A vs Product B comparison"},
-  {"question": "What is Technology Y?", "searchQuery": "Technology Y features"},
-  {"question": "What is Model Z 1234?", "searchQuery": "Model Z"}
-]
-
-Important: 
-- For comparison requests, create a single question/search that covers both items
-- If a term looks like it might be a model name with a version/date (like "R1 0528"), treat it as a single entity first, but create a search query that focuses on the main product name
-- Keep the number of sub-queries reasonable (aim for 3-5 max)
-
-Return ONLY a JSON array of {question, searchQuery} objects.`),
-      new HumanMessage(`Query: "${query}"`)
+Retorne APENAS um array JSON de objetos {question, searchQuery}.`),
+      new HumanMessage(`Consulta: "${query}"`)
     ];
 
     try {
@@ -1137,9 +1093,6 @@ Return ONLY a JSON array of {question, searchQuery} objects.`),
       return [{ question: query, searchQuery: query }];
     }
   }
-
-  // This method was removed as it's not used in the current implementation
-  // Search queries are now generated from sub-queries in the plan node
 
   private async generateAlternativeSearchQueries(
     subQueries: Array<{ question: string; searchQuery: string; answered: boolean; answer?: string; confidence: number; sources: string[] }>,
@@ -1168,28 +1121,23 @@ Return ONLY a JSON array of {question, searchQuery} objects.`),
     const messages = [
       new SystemMessage(`${this.getCurrentDateContext()}
 
-Generate ALTERNATIVE search queries for questions that weren't answered in previous attempts.
+Gere consultas de pesquisa ALTERNATIVAS para perguntas que não foram respondidas nas tentativas anteriores.
 
-Previous search attempts: ${previousAttempts}
-Previous queries that didn't find answers:
-${unansweredQueries.map(sq => `- Question: "${sq.question}"\n  Previous search: "${sq.searchQuery}"`).join('\n')}
+Tentativas de pesquisa anteriores: ${previousAttempts}
+Consultas anteriores que não encontraram respostas:
+${unansweredQueries.map(sq => `- Pergunta: "${sq.question}"\n  Pesquisa anterior: "${sq.searchQuery}"`).join('\n')}
 
-IMPORTANT: If searching for something with a specific version/date that keeps failing (like "R1 0528"), try searching for just the base product without the version.
+IMPORTANTE: Se estiver pesquisando por algo com uma versão/data específica que continua falhando, tente pesquisar apenas pelo produto base sem a versão.
 
-Generate NEW search queries using these strategies:
-1. Try broader or more general terms
-2. Try different phrasings or synonyms
-3. Remove specific qualifiers (like years or versions) if they're too restrictive
-4. Try searching for related concepts that might contain the answer
-5. For products that might not exist, search for the company or base product name
+Gere NOVAS consultas de pesquisa usando estas estratégias:
+1. Tente termos mais amplos ou gerais
+2. Tente frases diferentes ou sinônimos
+3. Remova qualificadores específicos (como anos ou versões) se forem muito restritivos
+4. Tente pesquisar por conceitos relacionados que possam conter a resposta
+5. Para produtos que podem não existir, pesquise pela empresa ou nome do produto base
 
-Examples of alternative searches:
-- Original: "ModelX 2024.05" → Alternative: "ModelX latest version"
-- Original: "OpenAI Q3 2024 revenue" → Alternative: "OpenAI financial results 2024"
-- Original: "iPhone 15 Pro features" → Alternative: "latest iPhone specifications"
-
-Return one alternative search query per unanswered question, one per line.`),
-      new HumanMessage(`Generate alternative searches for these ${unansweredQueries.length} unanswered questions.`)
+Retorne uma consulta de pesquisa alternativa por pergunta não respondida, uma por linha.`),
+      new HumanMessage(`Gere pesquisas alternativas para estas ${unansweredQueries.length} perguntas não respondidas.`)
     ];
 
     try {
@@ -1230,19 +1178,17 @@ Return one alternative search query per unanswered question, one per line.`),
       const messages = [
         new SystemMessage(`${this.getCurrentDateContext()}
 
-Extract ONE key finding from this content that's SPECIFICALLY relevant to the search query.
+Extraia UMA descoberta chave deste conteúdo que seja ESPECIFICAMENTE relevante para a consulta de pesquisa. RESPONDA EM PORTUGUÊS.
 
-CRITICAL: Only summarize information that directly relates to the search query.
-- If searching for "Samsung phones", only mention Samsung phone information
-- If searching for "Firecrawl founders", only mention founder information
-- If no relevant information is found, just return the most relevant fact from the page
+CRÍTICO: Apenas resuma informações que se relacionam diretamente com a consulta de pesquisa.
+- Se nenhuma informação relevante for encontrada, apenas retorne o fato mais relevante da página
 
-Instructions:
-- Return just ONE sentence with a specific finding
-- Include numbers, dates, or specific details when available
-- Keep it under ${SEARCH_CONFIG.SUMMARY_CHAR_LIMIT} characters
-- Don't say "No relevant information was found" - find something relevant to the current search`),
-        new HumanMessage(`Query: "${query}"\n\nContent: ${content.slice(0, 2000)}`)
+Instruções:
+- Retorne apenas UMA frase com uma descoberta específica em PORTUGUÊS
+- Inclua números, datas ou detalhes específicos quando disponíveis
+- Mantenha abaixo de ${SEARCH_CONFIG.SUMMARY_CHAR_LIMIT} caracteres
+- Não diga "Nenhuma informação relevante foi encontrada" - encontre algo relevante para a pesquisa atual`),
+        new HumanMessage(`Consulta: "${query}"\n\nConteúdo: ${content.slice(0, 2000)}`)
       ];
       
       const response = await this.llm.invoke(messages);
@@ -1260,24 +1206,26 @@ Instructions:
   ): Promise<string> {
     const sourcesText = sources
       .map((s, i) => {
-        if (!s.content) return `[${i + 1}] ${s.title}\n[No content available]`;
+        if (!s.content) return `[${i + 1}] ${s.title}\n[Sem conteúdo disponível]`;
         return `[${i + 1}] ${s.title}\n${s.content}`;
       })
       .join('\n\n');
     
     let contextPrompt = '';
     if (context && context.length > 0) {
-      contextPrompt = '\n\nPrevious conversation for context:\n';
+      contextPrompt = '\n\nConversa anterior para contexto:\n';
       context.forEach(c => {
-        contextPrompt += `User: ${c.query}\nAssistant: ${c.response.substring(0, 300)}...\n\n`;
+        contextPrompt += `Usuário: ${c.query}\nAssistente: ${c.response.substring(0, 300)}...\n\n`;
       });
     }
     
     const messages = [
       new SystemMessage(`${this.getCurrentDateContext()}
 
-Answer the user's question based on the provided sources. Provide a clear, comprehensive answer with citations [1], [2], etc. Use markdown formatting for better readability. If this question relates to previous topics discussed, make connections where relevant.`),
-      new HumanMessage(`Question: "${query}"${contextPrompt}\n\nBased on these sources:\n${sourcesText}`)
+Responda à pergunta do usuário EM PORTUGUÊS DO BRASIL com base nas fontes fornecidas. Forneça uma resposta clara e abrangente com citações [1], [2], etc. Use formatação markdown para melhor legibilidade. Se esta pergunta se relaciona a tópicos discutidos anteriormente, faça conexões onde for relevante.
+
+Sempre use o formato de citação [1] no texto quando afirmar fatos das fontes.`),
+      new HumanMessage(`Pergunta: "${query}"${contextPrompt}\n\nBaseado nestas fontes:\n${sourcesText}`)
     ];
     
     let fullText = '';
@@ -1311,36 +1259,35 @@ Answer the user's question based on the provided sources. Provide a clear, compr
     try {
       let contextPrompt = '';
       if (context && context.length > 0) {
-        contextPrompt = '\n\nPrevious conversation topics:\n';
+        contextPrompt = '\n\nTópicos da conversa anterior:\n';
         context.forEach(c => {
           contextPrompt += `- ${c.query}\n`;
         });
-        contextPrompt += '\nConsider the full conversation flow when generating follow-ups.\n';
+        contextPrompt += '\nConsidere o fluxo completo da conversa ao gerar o acompanhamento.\n';
       }
       
       const messages = [
         new SystemMessage(`${this.getCurrentDateContext()}
 
-Based on this search query and answer, generate 3 relevant follow-up questions that the user might want to explore next.
+Com base nesta consulta de pesquisa e resposta, gere 3 perguntas de acompanhamento relevantes EM PORTUGUÊS que o usuário pode querer explorar a seguir.
 
-Instructions:
-- Generate exactly 3 follow-up questions
-- Each question should explore a different aspect or dig deeper into the topic
-- Questions should be natural and conversational
-- They should build upon the information provided in the answer
-- Make them specific and actionable
-- Keep each question under 80 characters
-- Return only the questions, one per line, no numbering or bullets
-- Consider the entire conversation context when generating questions
-- Only include time-relevant questions if the original query was about current events or trends
+Instruções:
+- Gere exatamente 3 perguntas de acompanhamento
+- Cada pergunta deve explorar um aspecto diferente ou se aprofundar no tópico
+- As perguntas devem ser naturais e conversacionais
+- Elas devem se basear nas informações fornecidas na resposta
+- Torne-as específicas e acionáveis
+- Mantenha cada pergunta com menos de 80 caracteres
+- Retorne apenas as perguntas, uma por linha, sem numeração ou marcadores
+- Considere todo o contexto da conversa ao gerar perguntas
 
-Examples of good follow-up questions:
-- "How does this compare to [alternative]?"
-- "Can you explain [technical term] in more detail?"
-- "What are the practical applications of this?"
-- "What are the main benefits and drawbacks?"
-- "How is this typically implemented?"`),
-        new HumanMessage(`Original query: "${originalQuery}"\n\nAnswer summary: ${answer.length > 1000 ? answer.slice(0, 1000) + '...' : answer}${contextPrompt}`)
+Exemplos de boas perguntas de acompanhamento:
+- "Como isso se compara ao [alternativa]?"
+- "Você pode explicar [termo técnico] com mais detalhes?"
+- "Quais são as aplicações práticas disso?"
+- "Quais são os principais benefícios e desvantagens?"
+- "Como isso é tipicamente implementado?"`),
+        new HumanMessage(`Consulta original: "${originalQuery}"\n\nResumo da resposta: ${answer.length > 1000 ? answer.slice(0, 1000) + '...' : answer}${contextPrompt}`)
       ];
       
       const response = await this.llm.invoke(messages);

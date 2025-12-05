@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Firecrawl",
-  description: "A Firecrawl template",
+  title: "DeepTarget",
+  description: "Ferramenta de pesquisa profunda com IA",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
         suppressHydrationWarning={true}
         className={cn(

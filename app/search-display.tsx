@@ -16,7 +16,7 @@ function AnimatedThinkingLine({ messages }: { messages: string[] }) {
     if (messages.length <= 1) return;
     
     // Detect if this is a "speed run" (many source names)
-    const isSpeedRun = messages.some(msg => msg.includes('Analyzing') && messages.length > 5);
+    const isSpeedRun = messages.some(msg => msg.includes('Analisando') && messages.length > 5);
     const cycleDelay = isSpeedRun ? 600 : 2000; // Faster for speed runs
     const fadeDelay = isSpeedRun ? 100 : 300;
     
@@ -44,7 +44,7 @@ function AnimatedThinkingLine({ messages }: { messages: string[] }) {
   
   // Extract URL from message if it's an "Analyzing" message
   const currentMessage = messages[currentIndex];
-  const analyzingMatch = currentMessage.match(/Analyzing (.+)\.\.\./);
+  const analyzingMatch = currentMessage.match(/Analisando (.+)\.\.\./);
   const currentUrl = analyzingMatch ? analyzingMatch[1] : null;
   
   return (
@@ -115,7 +115,7 @@ function FoundSourcesGroup({
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="p-0.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors flex-shrink-0"
-            aria-label={isExpanded ? "Collapse sources" : "Expand sources"}
+            aria-label={isExpanded ? "Recolher fontes" : "Expandir fontes"}
           >
             <svg 
               className={`w-3 h-3 text-gray-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} 
@@ -162,15 +162,12 @@ function SourceProcessingLine({ url, stage, summary }: {
   stage: 'browsing' | 'extracting' | 'analyzing' | 'complete';
   summary?: string;
 }) {
-  // const stages = ['browsing', 'extracting', 'analyzing', 'complete'];
-  // const _currentStageIndex = stages.indexOf(stage);
-  
   
   const stageLabels = {
-    browsing: 'Browsing',
-    extracting: 'Extracting',
-    analyzing: 'Analyzing',
-    complete: 'Complete'
+    browsing: 'Navegando',
+    extracting: 'Extraindo',
+    analyzing: 'Analisando',
+    complete: 'Concluído'
   };
   
   return (
@@ -202,13 +199,13 @@ function SourceProcessingLine({ url, stage, summary }: {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span className="text-gray-500 dark:text-gray-500">
-                Complete
+                Concluído
               </span>
             </div>
           )
         ) : (
           <div className="flex items-center gap-1 mt-0.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
             <span className="text-gray-500 dark:text-gray-500">
               {stageLabels[stage as keyof typeof stageLabels]}...
             </span>
@@ -255,12 +252,12 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
   useEffect(() => {
     if (steps.length === 0 && events.length > 0) {
       setSteps([
-        { id: 'understanding', label: 'Understanding request', status: 'pending' },
-        { id: 'planning', label: 'Planning search', status: 'pending' },
-        { id: 'searching', label: 'Searching sources', status: 'pending' },
-        { id: 'analyzing', label: 'Analyzing content', status: 'pending' },
-        { id: 'synthesizing', label: 'Synthesizing answer', status: 'pending' },
-        { id: 'complete', label: 'Complete', status: 'pending' }
+        { id: 'understanding', label: 'Entendendo a solicitação', status: 'pending' },
+        { id: 'planning', label: 'Planejando a pesquisa', status: 'pending' },
+        { id: 'searching', label: 'Pesquisando fontes', status: 'pending' },
+        { id: 'analyzing', label: 'Analisando conteúdo', status: 'pending' },
+        { id: 'synthesizing', label: 'Sintetizando resposta', status: 'pending' },
+        { id: 'complete', label: 'Concluído', status: 'pending' }
       ]);
       // Start timer immediately
       setStartTime(Date.now());
@@ -306,9 +303,9 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
       
       setSteps(() => {
         const baseSteps = [
-          { id: 'understanding', label: 'Understanding request', status: 'pending' },
-          { id: 'planning', label: 'Planning search', status: 'pending' },
-          { id: 'searching', label: 'Searching sources', status: 'pending' }
+          { id: 'understanding', label: 'Entendendo a solicitação', status: 'pending' },
+          { id: 'planning', label: 'Planejando a pesquisa', status: 'pending' },
+          { id: 'searching', label: 'Pesquisando fontes', status: 'pending' },
         ] as SearchStep[];
         
         // Add dynamic search query steps if we're in or past the searching phase
@@ -325,9 +322,9 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
         
         // Add remaining steps
         baseSteps.push(
-          { id: 'analyzing', label: 'Analyzing content', status: 'pending' },
-          { id: 'synthesizing', label: 'Synthesizing answer', status: 'pending' },
-          { id: 'complete', label: 'Complete', status: 'pending' }
+          { id: 'analyzing', label: 'Analisando conteúdo', status: 'pending' },
+          { id: 'synthesizing', label: 'Sintetizando resposta', status: 'pending' },
+          { id: 'complete', label: 'Concluído', status: 'pending' }
         );
         
         // Update status based on current phase
@@ -456,14 +453,14 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-800">
               <div className="flex items-center justify-between">
                 <h4 className="text-[10px] font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                  Complete
+                  Concluído
                 </h4>
                 <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
                   {formatTime(elapsedSeconds)}
                 </span>
               </div>
               <div className="flex items-center justify-between mt-1">
-                <span className="text-[10px] text-gray-500 dark:text-gray-500">Sources found</span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-500">Fontes</span>
                 <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
                   {scrapedCount}
                 </span>
@@ -478,7 +475,7 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
                 {steps.map((step, index) => (
                   <div key={step.id} className="relative flex items-start gap-2 mb-6">
                     <div className="absolute left-[-24px] flex-shrink-0 mt-0.5">
-                      <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shadow-sm">
+                      <div className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center shadow-sm">
                         <span className="text-white text-xs">✓</span>
                       </div>
                     </div>
@@ -491,7 +488,7 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
                     
                     {index < steps.length - 1 && (
                       <div 
-                        className="absolute left-[-14px] top-[20px] h-[calc(100%+8px)] w-0.5 bg-orange-500"
+                        className="absolute left-[-14px] top-[20px] h-[calc(100%+8px)] w-0.5 bg-red-600"
                         style={{ opacity: 1 }}
                       />
                     )}
@@ -527,14 +524,14 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-800">
             <div className="flex items-center justify-between">
               <h4 className="text-[10px] font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Progress
+                Progresso
               </h4>
               <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
                 {formatTime(elapsedSeconds)}
               </span>
             </div>
             <div className="flex items-center justify-between mt-1">
-              <span className="text-[10px] text-gray-500 dark:text-gray-500">Sources found</span>
+              <span className="text-[10px] text-gray-500 dark:text-gray-500">Fontes</span>
               <span className="text-xs font-mono text-gray-600 dark:text-gray-400">
                 {scrapedCount}
               </span>
@@ -561,11 +558,11 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
                 {/* Checkmark on the left */}
                 <div className="absolute left-[-24px] flex-shrink-0 mt-0.5">
                   {step.status === 'completed' ? (
-                    <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shadow-sm animate-scale-in">
+                    <div className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center shadow-sm animate-scale-in">
                       <span className="text-white text-xs">✓</span>
                     </div>
                   ) : step.status === 'active' ? (
-                    <div className="w-5 h-5 rounded-full bg-orange-400 animate-pulse shadow-sm" />
+                    <div className="w-5 h-5 rounded-full bg-red-400 animate-pulse shadow-sm" />
                   ) : (
                     <div className="w-5 h-5 rounded-full bg-gray-300 dark:bg-gray-600" />
                   )}
@@ -584,7 +581,7 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
                   </p>
                   {step.status === 'active' && (
                     <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
-                      Processing...
+                      Processando...
                     </p>
                   )}
                 </div>
@@ -595,7 +592,7 @@ export function SearchDisplay({ events }: { events: SearchEvent[] }) {
                 <div 
                   className={`absolute left-[-14px] top-[20px] h-[calc(100%+8px)] w-0.5 transition-all duration-300 ${
                     index < steps.filter(s => s.status === 'completed').length
-                      ? 'bg-orange-500'
+                      ? 'bg-red-600'
                       : 'bg-gray-300 dark:bg-gray-600'
                   }`}
                   style={{ opacity: 1 }}
@@ -776,9 +773,9 @@ function renderEvent(event: SearchEvent, _completedPhases: Set<string>, currentP
       
       return (
         <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-          <div className="w-5 h-5 mt-0.5 rounded bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0">
+          <div className="w-5 h-5 mt-0.5 rounded bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
             {searchCompleted ? (
-              <svg className="w-3 h-3 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             ) : (
@@ -789,8 +786,8 @@ function renderEvent(event: SearchEvent, _completedPhases: Set<string>, currentP
             )}
           </div>
           <span className="text-sm">
-            Search {event.index} of {event.total}: <span className="font-medium text-gray-900 dark:text-gray-100">&quot;{event.query}&quot;</span>
-            {!searchCompleted && <span className="text-xs text-gray-500 dark:text-gray-500 ml-2">Finding sources...</span>}
+            Pesquisa {event.index} de {event.total}: <span className="font-medium text-gray-900 dark:text-gray-100">&quot;{event.query}&quot;</span>
+            {!searchCompleted && <span className="text-xs text-gray-500 dark:text-gray-500 ml-2">Encontrando fontes...</span>}
           </span>
         </div>
       );
@@ -804,7 +801,7 @@ function renderEvent(event: SearchEvent, _completedPhases: Set<string>, currentP
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <span>Found <span className="font-bold text-gray-900 dark:text-gray-100">{event.sources.length} sources</span> for &quot;{event.query}&quot;</span>
+            <span>Encontradas <span className="font-bold text-gray-900 dark:text-gray-100">{event.sources.length} fontes</span> para &quot;{event.query}&quot;</span>
           </div>
         </div>
       );
@@ -826,7 +823,7 @@ function renderEvent(event: SearchEvent, _completedPhases: Set<string>, currentP
           />
           <div className="flex-1">
             <div className="text-sm text-gray-900 dark:text-gray-100">
-              Browsing <span className="font-medium text-orange-600 dark:text-orange-400">{new URL(event.url).hostname}</span> for &quot;{event.query}&quot;
+              Navegando em <span className="font-medium text-red-600 dark:text-red-400">{new URL(event.url).hostname}</span> para &quot;{event.query}&quot;
             </div>
           </div>
         </div>
@@ -866,7 +863,7 @@ function renderEvent(event: SearchEvent, _completedPhases: Set<string>, currentP
             </svg>
           </div>
           <div className="text-sm">
-            <span className="font-medium">Error: </span>
+            <span className="font-medium">Erro: </span>
             <span>{event.error}</span>
             {event.errorType && <span className="text-xs ml-2">({event.errorType})</span>}
           </div>

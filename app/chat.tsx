@@ -21,10 +21,10 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 const SUGGESTED_QUERIES = [
-  "Who are the founders of Firecrawl?",
-  "When did NVIDIA release the RTX 4080 Super?",
-  "Compare the latest iPhone 16 and Samsung Galaxy S25",
-  "Compare Claude 4 to OpenAI's o3"
+  "Quais são as principais tendências de IA para 2025?",
+  "Compare o iPhone 16 com o Samsung Galaxy S25",
+  "Como começar a investir no mercado de ações brasileiro?",
+  "Resumo das últimas notícias sobre tecnologia"
 ];
 
 // Helper component for sources list
@@ -81,7 +81,7 @@ function SourcesList({ sources }: { sources: Source[] }) {
           onClick={() => setShowSourcesPanel(true)}
           className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 flex items-center gap-2"
         >
-          <span>View {sources.length} sources & page contents</span>
+          <span>Ver {sources.length} fontes e conteúdo</span>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -102,7 +102,7 @@ function SourcesList({ sources }: { sources: Source[] }) {
       } z-40 overflow-y-auto scrollbar-hide`}>
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold">Sources ({sources.length})</h3>
+            <h3 className="text-lg font-semibold">Fontes ({sources.length})</h3>
             <button
               onClick={() => setShowSourcesPanel(false)}
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
@@ -121,7 +121,7 @@ function SourcesList({ sources }: { sources: Source[] }) {
                   onClick={() => setExpandedSourceIndex(expandedSourceIndex === i ? null : i)}
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-sm font-medium text-orange-600 mt-0.5">[{i + 1}]</span>
+                    <span className="text-sm font-medium text-red-600 mt-0.5">[{i + 1}]</span>
                     <Image 
                       src={getFaviconUrl(source.url)} 
                       alt=""
@@ -139,7 +139,7 @@ function SourcesList({ sources }: { sources: Source[] }) {
                         href={source.url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="font-medium text-sm text-gray-900 dark:text-gray-100 hover:text-orange-600 dark:hover:text-orange-400 line-clamp-2"
+                        className="font-medium text-sm text-gray-900 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 line-clamp-2"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {source.title}
@@ -163,7 +163,7 @@ function SourcesList({ sources }: { sources: Source[] }) {
                   <div className="border-t border-gray-200 dark:border-gray-700">
                     <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
                       <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {source.content.length.toLocaleString()} characters
+                        {source.content.length.toLocaleString()} caracteres
                       </span>
                     </div>
                     <div className="p-4 max-h-96 overflow-y-auto scrollbar-hide">
@@ -241,7 +241,7 @@ export function Chat() {
     if (firecrawlApiKey.trim()) {
       setHasApiKey(true);
       setShowApiKeyModal(false);
-      toast.success('API key saved! Starting your search...');
+      toast.success('Chave API salva! Iniciando pesquisa...');
       
       // Continue with the pending query
       if (pendingQuery) {
@@ -364,7 +364,7 @@ export function Chat() {
                         {event.followUpQuestions && event.followUpQuestions.length > 0 && (
                           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                              Follow-up questions
+                              Perguntas de acompanhamento
                             </h3>
                             <div className="space-y-2">
                               {event.followUpQuestions.map((question, index) => (
@@ -377,13 +377,13 @@ export function Chat() {
                                     });
                                     document.dispatchEvent(evt);
                                   }}
-                                  className="block w-full text-left px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-700 hover:bg-orange-50 dark:hover:bg-orange-900/10 transition-colors group"
+                                  className="block w-full text-left px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-red-300 dark:hover:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors group"
                                 >
                                   <div className="flex items-center justify-between">
                                     <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">
                                       {question}
                                     </span>
-                                    <svg className="w-4 h-4 text-gray-400 group-hover:text-orange-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 text-gray-400 group-hover:text-red-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                   </div>
@@ -417,20 +417,17 @@ export function Chat() {
       setMessages(prev => prev.filter(msg => msg.id !== assistantMsgId));
       
       // Show error message to user
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred during search';
+      const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro durante a pesquisa';
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: 'assistant',
         content: (
           <div className="p-4 border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <p className="text-red-700 dark:text-red-300 font-medium">Search Error</p>
+            <p className="text-red-700 dark:text-red-300 font-medium">Erro na pesquisa</p>
             <p className="text-red-600 dark:text-red-400 text-sm mt-1">{errorMessage}</p>
             {(errorMessage.includes('API key') || errorMessage.includes('OPENAI_API_KEY')) && (
               <p className="text-red-600 dark:text-red-400 text-sm mt-2">
-                Please ensure all required API keys are set in your environment variables:
-                <br />• OPENAI_API_KEY (for GPT-4o)
-                <br />• ANTHROPIC_API_KEY (optional, for Claude)
-                <br />• FIRECRAWL_API_KEY (can be provided via UI)
+                Verifique se todas as chaves de API necessárias estão configuradas nas variáveis de ambiente.
               </p>
             )}
           </div>
@@ -499,14 +496,14 @@ export function Chat() {
                     }
                   }}
                   onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                  placeholder="Enter query..."
-                  className="w-full h-14 rounded-full border border-zinc-200 bg-white pl-6 pr-16 text-base ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-orange-400 shadow-sm"
+                  placeholder="Digite sua pergunta..."
+                  className="w-full h-14 rounded-full border border-zinc-200 bg-white pl-6 pr-16 text-base ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-red-400 shadow-sm"
                   disabled={isSearching}
                 />
                 <button
                   type="submit"
                   disabled={isSearching || !input.trim()}
-                  className="absolute right-2 top-2 h-10 w-10 bg-orange-500 hover:bg-orange-600 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
+                  className="absolute right-2 top-2 h-10 w-10 bg-red-600 hover:bg-red-700 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
                 >
                   {isSearching ? (
                     <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -524,7 +521,7 @@ export function Chat() {
                 {showSuggestions && !input && messages.length === 0 && (
                   <div className="absolute top-full mt-2 w-full bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden">
                     <div className="p-2">
-                      <p className="text-xs text-gray-500 dark:text-gray-400 px-3 py-2 font-medium">Try searching for:</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 px-3 py-2 font-medium">Tente pesquisar por:</p>
                       {SUGGESTED_QUERIES.map((suggestion, index) => (
                         <button
                           key={index}
@@ -590,15 +587,15 @@ export function Chat() {
                 }
               }}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              placeholder="Enter query..."
-              className="w-full h-14 rounded-full border border-zinc-200 bg-white pl-6 pr-16 text-base ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-orange-400 shadow-sm"
+              placeholder="Digite sua pergunta..."
+              className="w-full h-14 rounded-full border border-zinc-200 bg-white pl-6 pr-16 text-base ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-red-400 shadow-sm"
               disabled={isSearching}
             />
             
             <button
               type="submit"
               disabled={!input.trim() || isSearching}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white flex items-center justify-center transition-colors shadow-sm"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white flex items-center justify-center transition-colors shadow-sm"
             >
               {isSearching ? (
                 <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -627,7 +624,7 @@ export function Chat() {
             {showSuggestions && !input && (
               <div className="absolute bottom-full mb-2 w-full bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden">
                 <div className="p-2">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 px-3 py-2 font-medium">Try searching for:</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 px-3 py-2 font-medium">Tente pesquisar por:</p>
                   {SUGGESTED_QUERIES.map((suggestion, index) => (
                     <button
                       key={index}
@@ -656,24 +653,15 @@ export function Chat() {
       <Dialog open={showApiKeyModal} onOpenChange={setShowApiKeyModal}>
         <DialogContent className="sm:max-w-[425px] bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
           <DialogHeader>
-            <DialogTitle>Firecrawl API Key Required</DialogTitle>
+            <DialogTitle>Chave API Necessária</DialogTitle>
             <DialogDescription>
-              To use Firesearch, you need a Firecrawl API key. You can get one for free.
+              Para usar o DeepTarget, você precisa de uma chave API.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <Button
-                onClick={() => window.open('https://www.firecrawl.dev/app/api-keys', '_blank')}
-                className="w-full"
-                variant="code"
-              >
-                Get your free API key from Firecrawl →
-              </Button>
-            </div>
-            <div className="space-y-2">
               <label htmlFor="apiKey" className="text-sm font-medium">
-                Enter your API key
+                Insira sua chave API
               </label>
               <Input
                 id="apiKey"
@@ -690,14 +678,14 @@ export function Chat() {
               variant="code"
               onClick={() => setShowApiKeyModal(false)}
             >
-              Cancel
+              Cancelar
             </Button>
             <Button 
               variant="orange"
               onClick={saveApiKey}
               disabled={!firecrawlApiKey.trim()}
             >
-              Save and Continue
+              Salvar e Continuar
             </Button>
           </div>
         </DialogContent>
